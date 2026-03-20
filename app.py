@@ -3,6 +3,10 @@ from PIL import Image
 from orchestrator import AgentOrchestrator
 from caption_lookup import CaptionLookup
 
+import os
+import streamlit as st
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_API_KEY"]
 # =========================
 # LOAD CAPTION DATASET
 # =========================
