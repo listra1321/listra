@@ -10,7 +10,7 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_A
 # =========================
 # LOAD CAPTION DATASET
 # =========================
-caption_db = CaptionLookup("data_caption.xlsx")
+caption_db = CaptionLookup("data_caption.csv")
 
 # =========================
 # HELPER
