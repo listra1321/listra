@@ -2,3 +2,5 @@ streamlit
 requests
 pillow
 python-dotenv
+transformers
+torch
