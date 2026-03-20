@@ -32,6 +32,28 @@ def generate_caption_blip(image):
     caption = processor.decode(out[0], skip_special_tokens=True)
     return caption
 
+destinasi = st.text_input("Nama Destinasi Wisata", "Danau Toba")
+
+# ======================================================
+# VALIDASI DATA (ANTI HALUSINASI)
+# ======================================================
+if not context_data.strip():
+    st.warning("Data ulasan kosong. Pastikan file JSONL berisi field 'input'.")
+    st.stop()
+
+# ======================================================
+# VALIDASI DESTINASI (KUNCI DOMAIN)
+# ======================================================
+if destinasi not in DESTINASI_VALID:
+    st.error(
+        "🙏 Maaf, destinasi yang Anda masukkan tidak tersedia.\n\n"
+        "Sistem ini hanya mendukung **Danau Toba** dan **Candi Borobudur** "
+        "sesuai dengan cakupan data penelitian."
+    )
+    # RESET KE MENU AWAL (AUTO)
+    st.stop()
+
+
 # =========================
 # LOAD CAPTION DATASET
 # =========================
