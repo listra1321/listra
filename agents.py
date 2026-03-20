@@ -132,6 +132,9 @@ ATURAN WAJIB:
 3. Pastikan storytelling kontekstual dengan destinasi: {destination}.
 4. Setelah storytelling, buat rekomendasi kebijakan untuk pemerintah daerah.
 5. Gunakan Bahasa Indonesia formal.
+6. Hasil dari gambar harus dipastikan sesuai dengan isi gambar.
+7. Diluar dari hasil gambar jangan masukkan.
+8. Hasil dari gabungan teks input dan gambar harus sesuai fakta.
 
 DATA:
 Nama Destinasi: {destination}
@@ -141,6 +144,8 @@ TUGAS:
 1. Buat storytelling wisata yang natural, mengalir, dan deskriptif
 2. Identifikasi isu
 3. Berikan 3 rekomendasi kebijakan konkret berdasarkan hasil storytelling
+4. Rekomendasi harus berdasarkan fakta dari hasil storytelling
+5. Jangan memberikan rekomendasi diluar dari hasil storytelling wisata
 
 Teks Input:
 {text}
