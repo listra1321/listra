@@ -9,6 +9,24 @@ import os
 # =========================
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_API_KEY"]
 
+from transformers import BlipProcessor, BlipForConditionalGeneration
+import torch
+
+@st.cache_resource
+def load_blip():
+    processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+    return processor, model
+
+def generate_caption_blip(image):
+    processor, model = load_blip()
+
+    inputs = processor(images=image, return_tensors="pt")
+    out = model.generate(**inputs)
+
+    caption = processor.decode(out[0], skip_special_tokens=True)
+    return caption
+
 # =========================
 # LOAD CAPTION DATASET
 # =========================
@@ -57,13 +75,13 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
 
         # tampilkan gambar (TETAP ADA)
         image = Image.open(image_file)
-        st.image(image, caption="Gambar Input", use_column_width=True)
+        st.image(image, width=240)
 
         # =========================
         # CAPTION (HANYA BACKEND)
         # =========================
         filename = image_file.name.lower().strip()
-        caption = caption_db.get_caption(filename)
+        caption = generate_caption_blip(image)
 
         # fallback kalau tidak ada
         if not caption:
