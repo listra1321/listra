@@ -1,48 +1,59 @@
-import pandas as pd
 import ast
 
 class CaptionLookup:
 
     def __init__(self, file_path):
 
-        # baca sebagai raw text dulu (anti crash)
-        try:
-            self.df = pd.read_csv(
-                file_path,
-                encoding="utf-8",
-                sep=",",
-                engine="python",  
-                on_bad_lines="skip"
-            )
-        except Exception as e:
-            print("ERROR READ CSV:", e)
-            self.df = pd.DataFrame(columns=["photos", "image_story"])
-
         self.mapping = {}
 
-        #
-        for _, row in self.df.iterrows():
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
 
-            raw_photos = str(row.get("photos", "")).strip()
-            caption = str(row.get("image_story", "")).strip()
+        # skip header
+        for line in lines[1:]:
 
-            if not raw_photos or raw_photos == "[]":
+            line = line.strip()
+
+            if not line:
                 continue
 
             try:
-                # kalau bentuk list
-                photos_list = ast.literal_eval(raw_photos)
+                # split hanya di koma pertama
+                parts = line.split(",", 1)
 
-                if isinstance(photos_list, list):
-                    for p in photos_list:
-                        self.mapping[p.lower().strip()] = caption
+                if len(parts) < 2:
+                    continue
 
-                else:
-                    self.mapping[str(photos_list).lower().strip()] = caption
+                raw_photos = parts[0].strip()
+                caption = parts[1].strip().strip('"')
 
-            except:
-                # fallback kalau bukan list
-                self.mapping[raw_photos.lower().strip()] = caption
+                # parsing list
+                try:
+                    photos_list = ast.literal_eval(raw_photos)
+
+                    if isinstance(photos_list, list):
+                        for p in photos_list:
+                            self.mapping[p.lower().strip()] = caption
+                    else:
+                        self.mapping[str(photos_list).lower().strip()] = caption
+
+                except:
+                    self.mapping[raw_photos.lower().strip()] = caption
+
+            except Exception as e:
+                # skip baris rusak total
+                continue
 
     def get_caption(self, filename):
-        return self.mapping.get(filename.lower().strip(), None)
+        filename = filename.lower().strip()
+
+        # exact match
+        if filename in self.mapping:
+            return self.mapping[filename]
+
+        # fallback contains
+        for key in self.mapping:
+            if filename in key:
+                return self.mapping[key]
+
+        return None
