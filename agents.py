@@ -143,6 +143,8 @@ TUGAS:
 2. Identifikasi isu
 3. Berikan 3 rekomendasi kebijakan konkret berdasarkan hasil storytelling
 4. Rekomendasi harus berdasarkan fakta dari hasil storytelling
+5. Fokus hanya pada destinasi: {destination}\n"
+6. Dilarang menyebut destinasi lain\n"
 
 Teks Input:
 {text}
