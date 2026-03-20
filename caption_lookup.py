@@ -1,19 +1,21 @@
 import pandas as pd
+import ast
 
 class CaptionLookup:
 
     def __init__(self, file_path):
-        self.df = pd.read_csv(file_path)
+        self.df = pd.read_csv(file_path, on_bad_lines='skip')
 
-        self.df['photos'] = self.df['photos'].str.lower().str.strip()
+        self.mapping = {}
+
+        for _, row in self.df.iterrows():
+            try:
+                photos = ast.literal_eval(row['photos'])
+            except:
+                photos = [row['photos']]
+
+            for p in photos:
+                self.mapping[p.lower().strip()] = row['image_story']
 
     def get_caption(self, photos):
-
-        photos = photos.lower().strip()
-
-        match = self.df[self.df['photos'] == photos]
-
-        if not match.empty:
-            return match.iloc[0]['image_story']
-
-        return None
+        return self.mapping.get(photos.lower().strip(), None)
