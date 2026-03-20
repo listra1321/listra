@@ -7,7 +7,7 @@ class AgentOrchestrator:
         self.memory = ExampleMemory("data.jsonl")
         self.agent = UnifiedAgent(self.memory)
 
-    def run(self, text, caption, tujuan, destinasi):
+    def run(self, text, caption, tujuan, destination):
 
         destination = self.detect_destination(text)
 
