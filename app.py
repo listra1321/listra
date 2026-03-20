@@ -48,7 +48,7 @@ def detect_destination(text):
 # =========================
 # UI
 # =========================
-st.title("🌿 Agentic Ekowisata Berkelanjutan")
+st.title("🌿 Agentic Decision Support System (DSS) Ekowisata")
 
 text = st.text_area("📝 Masukkan teks wisata")
 
