@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-import request
+import requests
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
