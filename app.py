@@ -9,6 +9,11 @@ import os
 # =========================
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_API_KEY"]
 
+st.set_page_config(
+    page_title="Agentic DSS Ekowisata | Listra Horhoruw",
+    layout="wide"
+)
+
 from transformers import BlipProcessor, BlipForConditionalGeneration
 import torch
 
