@@ -60,6 +60,20 @@ text = st.text_area("📝 Masukkan teks wisata")
 
 image_file = st.file_uploader("📷 Upload gambar")
 
+# =========================
+# VALIDASI DESTINASI (ANTI HALUSINASI DOMAIN)
+# =========================
+DESTINASI_VALID = ["Danau Toba", "Candi Borobudur"]
+
+destinasi = st.selectbox(
+    "📍 Pilih Destinasi Wisata",
+    DESTINASI_VALID
+)
+
+if destinasi not in DESTINASI_VALID:
+    st.error("Destinasi tidak valid.")
+    st.stop()
+
 tujuan = st.selectbox(
     "🎯 Tujuan Kebijakan",
     [
