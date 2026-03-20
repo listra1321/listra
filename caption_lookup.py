@@ -18,7 +18,6 @@ class CaptionLookup:
                 continue
 
             try:
-                # split hanya di koma pertama
                 parts = line.split(",", 1)
 
                 if len(parts) < 2:
@@ -27,7 +26,6 @@ class CaptionLookup:
                 raw_photos = parts[0].strip()
                 caption = parts[1].strip().strip('"')
 
-                # parsing list
                 try:
                     photos_list = ast.literal_eval(raw_photos)
 
@@ -40,18 +38,15 @@ class CaptionLookup:
                 except:
                     self.mapping[raw_photos.lower().strip()] = caption
 
-            except Exception as e:
-                # skip baris rusak total
+            except:
                 continue
 
     def get_caption(self, filename):
         filename = filename.lower().strip()
 
-        # exact match
         if filename in self.mapping:
             return self.mapping[filename]
 
-        # fallback contains
         for key in self.mapping:
             if filename in key:
                 return self.mapping[key]
