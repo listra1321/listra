@@ -111,17 +111,6 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         st.subheader("📄 Storytelling Wisata")
         st.write(story.strip())
 
-        # =========================
-        # REKOMENDASI KEBIJAKAN
-        # =========================
-        st.subheader("📊 Rekomendasi Kebijakan")
-
-        if rekom:
-            for line in rekom.split("\n"):
-                if line.strip():
-                    st.write(f"- {line.strip()}")
-        else:
-            st.write("Belum tersedia rekomendasi.")
 
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
