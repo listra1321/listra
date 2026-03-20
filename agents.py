@@ -1,10 +1,10 @@
-from dotenv import load_dotenv
-import requests
 import os
-
-load_dotenv(dotenv_path=".env")
+import streamlit as st
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not OPENROUTER_API_KEY:
+    OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
 MODEL = "meta-llama/llama-3-8b-instruct"
 
 
