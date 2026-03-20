@@ -2,11 +2,13 @@ import streamlit as st
 from PIL import Image
 from orchestrator import AgentOrchestrator
 from caption_lookup import CaptionLookup
-
 import os
-import streamlit as st
 
+# =========================
+# API KEY (Streamlit Cloud)
+# =========================
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_API_KEY"]
+
 # =========================
 # LOAD CAPTION DATASET
 # =========================
@@ -28,7 +30,7 @@ def detect_destination(text):
 # =========================
 # UI
 # =========================
-st.title("🌿 Agentic Ekowisata Berbasis Data")
+st.title("🌿 Agentic Ekowisata Berkelanjutan")
 
 text = st.text_area("📝 Masukkan teks wisata")
 
@@ -37,9 +39,10 @@ image_file = st.file_uploader("📷 Upload gambar")
 tujuan = st.selectbox(
     "🎯 Tujuan Kebijakan",
     [
+        "Konservasi Lingkungan",
+        "Pemberdayaan Masyarakat Lokal",
         "Optimalisasi Ekonomi Pariwisata",
-        "Keberlanjutan Lingkungan",
-        "Peningkatan Pengalaman Wisatawan"
+        "Keseimbangan Ekowisata Berkelanjutan"
     ]
 )
 
@@ -52,22 +55,19 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
 
     if text and image_file:
 
+        # tampilkan gambar (TETAP ADA)
         image = Image.open(image_file)
         st.image(image, caption="Gambar Input", use_column_width=True)
 
         # =========================
-        # CAPTION DARI DATASET
+        # CAPTION (HANYA BACKEND)
         # =========================
         filename = image_file.name.lower().strip()
-
         caption = caption_db.get_caption(filename)
 
-        # fallback jika tidak ada
+        # fallback kalau tidak ada
         if not caption:
             caption = f"Gambar berkaitan dengan konteks wisata: {text[:100]}"
-
-        st.subheader("📷 Caption Gambar")
-        st.write(caption)
 
         # =========================
         # MULTI-AGENT PROCESS
@@ -76,10 +76,34 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
             result = orch.run(text, caption, tujuan)
 
         # =========================
-        # OUTPUT
+        # OUTPUT BERSIH (NO CAPTION)
         # =========================
-        st.subheader("📄 Storytelling & Rekomendasi Kebijakan")
-        st.write(result)
+        st.divider()
+
+        # split hasil jadi 2 bagian
+        if "REKOMENDASI:" in result:
+            story, rekom = result.split("REKOMENDASI:", 1)
+        else:
+            story = result
+            rekom = ""
+
+        # =========================
+        # STORYTELLING
+        # =========================
+        st.subheader("📄 Storytelling Wisata")
+        st.write(story.strip())
+
+        # =========================
+        # REKOMENDASI KEBIJAKAN
+        # =========================
+        st.subheader("📊 Rekomendasi Kebijakan")
+
+        if rekom:
+            for line in rekom.split("\n"):
+                if line.strip():
+                    st.write(f"- {line.strip()}")
+        else:
+            st.write("Belum tersedia rekomendasi.")
 
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
