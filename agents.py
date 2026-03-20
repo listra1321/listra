@@ -124,17 +124,23 @@ class UnifiedAgent:
         fewshot = self.memory.format_examples(examples)
 
         prompt = f"""
-Anda adalah AI untuk storytelling kebijakan ekowisata berbasis multimodal.
+Anda adalah sistem pendukung kebijakan ekowisata berbasis multimodal.
 
-TUGAS:
-1. Gabungkan teks input dan deskripsi gambar menjadi storytelling yang UTUH.
+ATURAN WAJIB:
+1. Gabungkan teks input dan deskripsi gambar menjadi narasi yang ALAMI dan IMERSIF.
 2. Jangan menghilangkan makna dari teks maupun gambar.
 3. Pastikan storytelling kontekstual dengan destinasi: {destination}.
 4. Setelah storytelling, buat rekomendasi kebijakan untuk pemerintah daerah.
+5. Gunakan Bahasa Indonesia formal.
 
 DATA:
 Nama Destinasi: {destination}
 Tujuan Kebijakan: {tujuan}
+
+TUGAS:
+1. Buat storytelling wisata yang natural, mengalir, dan deskriptif
+2. Identifikasi isu
+3. Berikan 3 rekomendasi kebijakan konkret berdasarkan hasil storytelling
 
 Teks Input:
 {text}
@@ -158,4 +164,4 @@ OUTPUT FORMAT:
 JANGAN tampilkan evaluasi.
 """
 
-        return call_llm("Anda adalah AI kebijakan ekowisata.", prompt)
+        return call_llm("Anda adalah sistem pendukung kebijakan ekowisata.", prompt)
