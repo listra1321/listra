@@ -32,7 +32,7 @@ def generate_caption_blip(image):
     caption = processor.decode(out[0], skip_special_tokens=True)
     return caption
 
-destinasi = st.text_input("Nama Destinasi Wisata", "Danau Toba")
+
 
 # ======================================================
 # VALIDASI DATA (ANTI HALUSINASI)
