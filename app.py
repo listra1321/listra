@@ -125,3 +125,12 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
 
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
+
+# ======================================================
+# Footer
+# ======================================================
+st.markdown("---")
+st.caption(
+    "Catatan: Sistem ini merupakan prototipe DSS berbasis agentic control "
+    "dan tidak menggantikan kewenangan pengambil kebijakan."
+)
