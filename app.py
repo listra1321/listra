@@ -114,6 +114,46 @@ def detect_destination(text):
         return "Destinasi Wisata"
 
 # =========================
+# VALIDASI DESTINASI (MULTIMODAL)
+# =========================
+def validate_destination(text, caption, destinasi):
+
+    text_lower = text.lower()
+    caption_lower = caption.lower()
+
+    # keyword tiap destinasi
+    borobudur_keywords = ["borobudur", "candi", "stupa", "temple"]
+    toba_keywords = ["toba", "danau", "lake", "water", "mountain"]
+
+    # deteksi dari teks
+    text_is_borobudur = any(k in text_lower for k in borobudur_keywords)
+    text_is_toba = any(k in text_lower for k in toba_keywords)
+
+    # deteksi dari gambar (caption)
+    caption_is_borobudur = any(k in caption_lower for k in borobudur_keywords)
+    caption_is_toba = any(k in caption_lower for k in toba_keywords)
+
+    # =========================
+    # DETEKSI KONFLIK
+    # =========================
+    if text_is_borobudur and caption_is_toba:
+        return False
+
+    if text_is_toba and caption_is_borobudur:
+        return False
+
+    # =========================
+    # VALIDASI SESUAI PILIHAN
+    # =========================
+    if destinasi == "Candi Borobudur":
+        return text_is_borobudur or caption_is_borobudur
+
+    elif destinasi == "Danau Toba":
+        return text_is_toba or caption_is_toba
+
+    return True
+
+# =========================
 # UI
 # =========================
 st.title("🌿 Agentic Decision Support System (DSS) Ekowisata")
@@ -164,6 +204,15 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # =========================
         filename = image_file.name.lower().strip()
         caption = generate_caption_blip(image)
+
+        # =========================
+        # VALIDASI DESTINASI
+        # =========================
+        is_valid = validate_destination(text, caption, destinasi)
+
+        if not is_valid:
+            st.error("❌ Maaf, terdapat ketidaksesuaian antara teks, gambar, dan destinasi.")
+            st.stop()
 
         # fallback kalau tidak ada
         if not caption:
