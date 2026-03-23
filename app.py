@@ -132,7 +132,7 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # MULTI-AGENT PROCESS
         # =========================
         with st.spinner("🤖 Menghasilkan storytelling dan kebijakan..."):
-            result = orch.run(text, caption, tujuan)
+            result = orch.run(text, caption, destination, tujuan)
 
         # =========================
         # OUTPUT BERSIH (NO CAPTION)
