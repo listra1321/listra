@@ -193,6 +193,12 @@ ATURAN:
 - Gunakan caption sebagai referensi, tetapi prioritaskan kesesuaian dengan destinasi
 - Jika caption tidak sesuai dengan destinasi, abaikan bagian yang tidak relevan
 - Jangan menyebut destinasi lain
+- Jika tidak yakin jumlah objek → gunakan deskripsi umum (misal: beberapa wisatawan)
+- Jangan menyebut jumlah atau gender jika tidak jelas
+
+ADAPTIF:
+- Jika teks pendek → buat storytelling singkat
+- Jika teks panjang → buat storytelling lebih detail
 
 DATA:
 Teks wisatawan:
@@ -206,7 +212,8 @@ TUJUAN KEBIJAKAN:
 {tujuan}
 
 TUGAS:
-Buat SATU paragraf storytelling yang mengalir dan menyatu.
+Buat SATU paragraf storytelling yang mengalir dan menyatu
+
 
 ATURAN:
 - Gabungkan pengalaman wisata, deskripsi visual gambar, dan isu secara alami dalam satu narasi
