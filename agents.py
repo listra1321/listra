@@ -121,53 +121,38 @@ class UnifiedAgent:
     def run(self, text, caption, destination, tujuan):
 
         prompt = f"""
-Anda adalah sistem pendukung kebijakan ekowisata.
+Anda adalah sistem pendukung keputusan kebijakan ekowisata.
 
-ATURAN WAJIB:
-- Gunakan nama destinasi: {destination}
-- Sebut {destination} di kalimat pertama
-- Dilarang menggunakan "Destinasi Wisata"
-- Dilarang menyebut tempat lain
+ATURAN:
+- Fokus hanya pada destinasi: {destination}
+- Dilarang menyebut destinasi lain
 - Gunakan Bahasa Indonesia formal
-- Jangan mengarang fakta di luar input
 
-INPUT:
-Teks: {text}
-Gambar: {caption}
-Destinasi: {destination}
-Tujuan: {tujuan}
+DATA:
+Teks wisatawan:
+{text}
 
-OUTPUT (WAJIB FORMAT INI):
+Deskripsi gambar:
+{caption}
 
-📖 Storytelling:
-(Tuliskan 1 paragraf, kalimat pertama HARUS menyebut {destination})
+TUJUAN KEBIJAKAN:
+{tujuan}
 
-🏛️ Rekomendasi Kebijakan:
-1. ...
-2. ...
-3. ...
+TUGAS:
+1. Buat storytelling wisata untuk {destination}
+2. Identifikasi isu dari cerita
+3. Berikan 3 rekomendasi kebijakan konkret
 
-VALIDASI:
-- Tidak boleh ada kata "Destinasi Wisata"
+Gunakan bahasa formal, jelas, dan berbasis konteks input.
 """
 
         result = call_llm(
-            f"""
-Anda adalah sistem DSS ekowisata.
-
-ATURAN KERAS:
-- WAJIB gunakan nama destinasi: {destination}
-- DILARANG keras menggunakan kata "Destinasi Wisata"
-- Jika muncul kata itu, ganti dengan {destination}
-- Jangan menyebut tempat lain
-
-Output harus patuh 100%.
-""",
+            f"Anda hanya boleh membahas {destination}. Gunakan Bahasa Indonesia.",
             prompt
         )
 
         # =========================
-        # HARD CLEANING
+        # CLEANING MINIMAL (AMAN)
         # =========================
         bad_words = [
             "Destinasi Wisata",
@@ -183,7 +168,6 @@ Output harus patuh 100%.
 
         result = result.replace("Based on the input provided,", "")
 
-        # DEBUG (opsional)
         print("DEBUG RESULT:", result)
 
         return result
