@@ -9,8 +9,6 @@ class AgentOrchestrator:
 
     def run(self, text, caption, destination, tujuan):
 
-        destination = self.detect_destination(text)
-
         return self.agent.run(text, caption, destination, tujuan)
 
     def detect_destination(self, text):
