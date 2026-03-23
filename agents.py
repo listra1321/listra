@@ -59,7 +59,7 @@ def call_llm(system_prompt, user_prompt):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        "temperature": 0.7
+        "temperature": 0.3
     }
 
     response = requests.post(url, headers=headers, json=data)
@@ -148,13 +148,34 @@ OUTPUT (WAJIB FORMAT INI):
 3. ...
 """
 
-        result = call_llm(
-            "Anda adalah sistem DSS yang akurat dan tidak berhalusinasi.",
-            prompt
-        )
+result = call_llm(
+    f"""
+Anda adalah sistem DSS ekowisata.
+
+ATURAN KERAS:
+- WAJIB gunakan nama destinasi: {destination}
+- DILARANG keras menggunakan kata "Destinasi Wisata"
+- Jika muncul kata "Destinasi Wisata", itu SALAH dan harus diganti menjadi {destination}
+- Jangan menyebut tempat lain
+
+Output harus 100% patuh.
+""",
+    prompt
+)
 
         # HARD CLEANING
-        result = result.replace("Destinasi Wisata", destination)
+        bad_words = [
+    "Destinasi Wisata",
+    "destinasi wisata",
+    "Tempat ini",
+    "tempat ini",
+    "Lokasi ini",
+    "lokasi ini"
+]
+
+for w in bad_words:
+    result = result.replace(w, destination)
         result = result.replace("Based on the input provided,", "")
 
         return result
+print("DEBUG RESULT:", result)
