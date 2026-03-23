@@ -146,36 +146,44 @@ OUTPUT (WAJIB FORMAT INI):
 1. ...
 2. ...
 3. ...
+
+VALIDASI:
+- Tidak boleh ada kata "Destinasi Wisata"
 """
 
-result = call_llm(
-    f"""
+        result = call_llm(
+            f"""
 Anda adalah sistem DSS ekowisata.
 
 ATURAN KERAS:
 - WAJIB gunakan nama destinasi: {destination}
 - DILARANG keras menggunakan kata "Destinasi Wisata"
-- Jika muncul kata "Destinasi Wisata", itu SALAH dan harus diganti menjadi {destination}
+- Jika muncul kata itu, ganti dengan {destination}
 - Jangan menyebut tempat lain
 
-Output harus 100% patuh.
+Output harus patuh 100%.
 """,
-    prompt
-)
+            prompt
+        )
 
+        # =========================
         # HARD CLEANING
+        # =========================
         bad_words = [
-    "Destinasi Wisata",
-    "destinasi wisata",
-    "Tempat ini",
-    "tempat ini",
-    "Lokasi ini",
-    "lokasi ini"
-]
+            "Destinasi Wisata",
+            "destinasi wisata",
+            "Tempat ini",
+            "tempat ini",
+            "Lokasi ini",
+            "lokasi ini"
+        ]
 
-for w in bad_words:
-    result = result.replace(w, destination)
+        for w in bad_words:
+            result = result.replace(w, destination)
+
         result = result.replace("Based on the input provided,", "")
 
+        # DEBUG (opsional)
+        print("DEBUG RESULT:", result)
+
         return result
-print("DEBUG RESULT:", result)
