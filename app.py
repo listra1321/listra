@@ -11,6 +11,30 @@ st.set_page_config(
     layout="wide"
 )
 
+def map_sentiment_to_emoji(label):
+    label = label.lower()
+
+    if "positive" in label:
+        return "😊"
+    elif "negative" in label:
+        return "😡"
+    else:
+        return "😐"
+
+from transformers import pipeline
+
+# =========================
+# SENTIMENT MODEL
+# =========================
+@st.cache_resource
+def load_sentiment():
+    return pipeline("sentiment-analysis")
+
+def analyze_sentiment(text):
+    classifier = load_sentiment()
+    result = classifier(text)[0]
+    return result['label'], result['score']
+
 # =========================
 # PASSWORD PROTECTION
 # =========================
@@ -129,6 +153,12 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
             caption = f"Gambar berkaitan dengan konteks wisata: {text[:100]}"
 
         # =========================
+        # SENTIMENT ANALYSIS
+        # =========================
+        sentiment_label, score = analyze_sentiment(text)
+        emoji = map_sentiment_to_emoji(sentiment_label)
+
+        # =========================
         # MULTI-AGENT PROCESS
         # =========================
         with st.spinner("🤖 Menghasilkan storytelling dan kebijakan..."):
@@ -150,7 +180,7 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # STORYTELLING
         # =========================
         st.subheader("📄 Storytelling Wisata")
-        st.write(story.strip())
+        st.write(f"{emoji} {story.strip()}")
 
 
     else:
