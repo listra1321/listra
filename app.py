@@ -181,8 +181,8 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         is_valid = validate_destination(text, caption, destinasi)
 
         if not is_valid:
-        st.error("❌ Maaf, input tidak sesuai dengan destinasi yang dipilih.")
-        st.stop()
+            st.error("❌ Maaf, input tidak sesuai dengan destinasi yang dipilih.")
+            st.stop()
         
 
         # =========================
