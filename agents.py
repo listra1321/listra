@@ -120,14 +120,18 @@ class UnifiedAgent:
 
     def run(self, text, caption, destination, tujuan):
 
+        # =========================
+        # PROMPT UTAMA (SIMPLE & KUAT)
+        # =========================
         prompt = f"""
 Anda adalah sistem pendukung keputusan kebijakan ekowisata.
 
 ATURAN:
 - Fokus hanya pada destinasi: {destination}
-- Gunakan nama {destination} secara eksplisit dalam narasi
-- Dilarang menyebut destinasi lain
+- Gunakan nama {destination} dalam narasi
 - Gunakan Bahasa Indonesia formal
+- Jangan menyebut destinasi lain
+- Jangan membuat format tambahan
 
 DATA:
 Teks wisatawan:
@@ -140,27 +144,38 @@ Deskripsi gambar:
 TUJUAN KEBIJAKAN:
 {tujuan}
 
-TUGAS:
-1. Buat storytelling wisata untuk {destination}
-2. Identifikasi isu dari cerita
-3. Berikan 3 rekomendasi kebijakan konkret
+TULIS HASIL PERSIS SEPERTI FORMAT INI:
 
-Gunakan bahasa formal dan berbasis konteks input.
+📖 Storytelling:
+Saya mengunjungi {destination} dan ...
+
+🏛️ Rekomendasi Kebijakan:
+1. ...
+2. ...
+3. ...
 """
 
-        result = call_llm(
-            f"""
+        # =========================
+        # SYSTEM PROMPT (PENGUAT)
+        # =========================
+        system_prompt = f"""
 Anda hanya membahas {destination}.
 
 WAJIB:
-- Selalu gunakan nama {destination}
-- Jangan gunakan istilah "Destinasi Wisata"
 - Gunakan Bahasa Indonesia
-""",
-            prompt
-        )
+- Gunakan nama {destination}, bukan "Destinasi Wisata"
+- Ikuti format output persis seperti diminta
+- Jangan menambahkan penjelasan lain
+"""
 
-        # CLEANING BACKUP
+        # =========================
+        # CALL LLM
+        # =========================
+        result = call_llm(system_prompt, prompt)
+
+        # =========================
+        # CLEANING OUTPUT (ANTI ERROR)
+        # =========================
         bad_words = [
             "Destinasi Wisata",
             "destinasi wisata",
@@ -173,6 +188,16 @@ WAJIB:
         for w in bad_words:
             result = result.replace(w, destination)
 
+        # hapus pola jawaban model yang sering muncul
+        if "Berikut adalah" in result:
+            result = result.replace("Berikut adalah tugas yang telah saya lakukan:", "")
+
+        if "Based on the input provided," in result:
+            result = result.replace("Based on the input provided,", "")
+
+        # =========================
+        # DEBUG (OPSIONAL)
+        # =========================
         print("DEBUG RESULT:", result)
 
         return result
