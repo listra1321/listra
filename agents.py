@@ -206,11 +206,15 @@ TUJUAN KEBIJAKAN:
 {tujuan}
 
 TUGAS:
-1. Buat storytelling berdasarkan teks dan gambar yang relevan
-2. Sebut elemen visual yang masuk akal untuk destinasi tersebut
-3. Sebut detail visual dari gambar dalam narasi
-4. Identifikasi isu berdasarkan kondisi yang terlihat
-5. Berikan 3 rekomendasi kebijakan yang relevan
+Buat SATU paragraf storytelling yang mengalir dan menyatu.
+
+ATURAN:
+- Gabungkan pengalaman wisata, deskripsi visual gambar, dan isu secara alami dalam satu narasi
+- Jangan memisahkan menjadi beberapa paragraf
+- Jangan menjelaskan gambar secara terpisah
+- Jangan menggunakan kalimat seperti "Gambar menunjukkan..."
+- Narasi harus terasa seperti cerita utuh, bukan laporan
+- Berikan 3 rekomendasi kebijakan yang relevan
 
 FORMAT OUTPUT (WAJIB):
 
