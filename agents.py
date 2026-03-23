@@ -214,7 +214,7 @@ TUGAS:
 
 FORMAT OUTPUT (WAJIB):
 
-Saya mengunjungi {destination} dan melihat ...
+(Tuliskan narasi wisata yang alami dan imersif, tidak harus diawali dengan kalimat tertentu)
 
 🏛️ Rekomendasi Kebijakan:
 1. ...
