@@ -11,10 +11,28 @@ st.set_page_config(
     layout="wide"
 )
 
+# =========================
+# PASSWORD PROTECTION
+# =========================
 SYSTEM_PASSWORD = st.secrets.get("SYSTEM_PASSWORD")
 
-if not SYSTEM_PASSWORD:
-    st.error("SYSTEM_PASSWORD belum diset di Streamlit Secrets.")
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+if not st.session_state["authenticated"]:
+    st.title("🔐 Login Sistem DSS Ekowisata")
+    st.markdown("Masukkan password untuk mengakses sistem.")
+
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if password == SYSTEM_PASSWORD:
+            st.session_state["authenticated"] = True
+            st.success("Login berhasil!")
+            st.rerun()
+        else:
+            st.error("Password salah.")
+
     st.stop()
 
 from transformers import BlipProcessor, BlipForConditionalGeneration
