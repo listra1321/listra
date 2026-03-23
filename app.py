@@ -28,7 +28,10 @@ from transformers import pipeline
 # =========================
 @st.cache_resource
 def load_sentiment():
-    return pipeline("sentiment-analysis")
+    return pipeline(
+        "sentiment-analysis",
+        model="indobenchmark/indobert-base-p1"
+    )
 
 def analyze_sentiment(text):
     classifier = load_sentiment()
