@@ -121,17 +121,18 @@ class UnifiedAgent:
     def run(self, text, caption, destination, tujuan):
 
         # =========================
-        # PROMPT UTAMA (SIMPLE & KUAT)
+        # PROMPT UTAMA (MULTIMODAL STRONG)
         # =========================
         prompt = f"""
-Anda adalah sistem pendukung keputusan kebijakan ekowisata.
+Anda adalah sistem pendukung keputusan kebijakan ekowisata berbasis multimodal.
 
 ATURAN:
 - Fokus hanya pada destinasi: {destination}
-- Gunakan nama {destination} dalam narasi
 - Gunakan Bahasa Indonesia formal
+- WAJIB menggabungkan informasi dari teks DAN gambar
+- WAJIB menyebut elemen visual dari gambar (objek, suasana, aktivitas)
+- Dilarang membuat cerita umum yang tidak sesuai dengan gambar
 - Jangan menyebut destinasi lain
-- Jangan membuat format tambahan
 
 DATA:
 Teks wisatawan:
@@ -144,10 +145,16 @@ Deskripsi gambar:
 TUJUAN KEBIJAKAN:
 {tujuan}
 
-TULIS HASIL PERSIS SEPERTI FORMAT INI:
+TUGAS:
+1. Buat storytelling yang menggabungkan teks dan gambar secara nyata
+2. Sebut detail visual dari gambar dalam narasi
+3. Identifikasi isu berdasarkan kondisi yang terlihat
+4. Berikan 3 rekomendasi kebijakan yang relevan
+
+FORMAT OUTPUT (WAJIB):
 
 📖 Storytelling:
-Saya mengunjungi {destination} dan ...
+Saya mengunjungi {destination} dan melihat ...
 
 🏛️ Rekomendasi Kebijakan:
 1. ...
@@ -156,16 +163,17 @@ Saya mengunjungi {destination} dan ...
 """
 
         # =========================
-        # SYSTEM PROMPT (PENGUAT)
+        # SYSTEM PROMPT (PENGUAT PERILAKU)
         # =========================
         system_prompt = f"""
 Anda hanya membahas {destination}.
 
 WAJIB:
 - Gunakan Bahasa Indonesia
-- Gunakan nama {destination}, bukan "Destinasi Wisata"
-- Ikuti format output persis seperti diminta
-- Jangan menambahkan penjelasan lain
+- Gunakan informasi dari teks dan gambar
+- Jika gambar menunjukkan objek tertentu, sebutkan dalam cerita
+- Jangan membuat narasi umum
+- Ikuti format output dengan tepat
 """
 
         # =========================
@@ -174,7 +182,7 @@ WAJIB:
         result = call_llm(system_prompt, prompt)
 
         # =========================
-        # CLEANING OUTPUT (ANTI ERROR)
+        # CLEANING OUTPUT (BACKUP)
         # =========================
         bad_words = [
             "Destinasi Wisata",
@@ -196,8 +204,10 @@ WAJIB:
             result = result.replace("Based on the input provided,", "")
 
         # =========================
-        # DEBUG (OPSIONAL)
+        # DEBUG (SANGAT DISARANKAN)
         # =========================
+        print("DEBUG DESTINATION:", destination)
+        print("DEBUG CAPTION:", caption)
         print("DEBUG RESULT:", result)
 
         return result
