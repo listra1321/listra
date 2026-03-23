@@ -120,107 +120,41 @@ class UnifiedAgent:
 
     def run(self, text, caption, destination, tujuan):
 
-        examples = self.memory.get_examples(2)
-        fewshot = self.memory.format_examples(examples)
-
         prompt = f"""
-Anda adalah sistem pendukung kebijakan ekowisata berbasis multimodal.
+Anda adalah sistem pendukung kebijakan ekowisata.
 
-=========================
-ATURAN WAJIB (STRICT MODE)
-=========================
+ATURAN WAJIB:
+- Gunakan nama destinasi: {destination}
+- Sebut {destination} di kalimat pertama
+- Dilarang menggunakan "Destinasi Wisata"
+- Dilarang menyebut tempat lain
+- Gunakan Bahasa Indonesia formal
+- Jangan mengarang fakta di luar input
 
-1. WAJIB menyebut nama destinasi ini di kalimat pertama:
-   "{destination}"
-
-2. DILARANG menggunakan istilah:
-   - "Destinasi Wisata"
-   - "tempat ini"
-   - "lokasi ini"
-
-3. DILARANG menyebut:
-   - kota/negara lain
-   - destinasi lain selain "{destination}"
-
-4. DILARANG mengarang fakta (contoh: suhu, negara, sejarah fiktif)
-
-5. Jika informasi tidak tersedia:
-   → gunakan deskripsi umum yang realistis
-   → JANGAN berhalusinasi
-
-6. Storytelling HARUS konsisten dengan:
-   - teks input
-   - caption gambar
-   - destinasi "{destination}"
-
-=========================
-DATA
-=========================
-
+INPUT:
+Teks: {text}
+Gambar: {caption}
 Destinasi: {destination}
-Tujuan Kebijakan: {tujuan}
+Tujuan: {tujuan}
 
-=========================
-INPUT
-=========================
-
-Teks:
-Pengalaman wisata di {destination}.
-{text}
-
-Deskripsi Gambar:
-{caption}
-
-=========================
-CONTOH
-=========================
-
-{fewshot}
-
-=========================
-TUGAS
-=========================
-
-1. Buat storytelling naratif (1–2 paragraf)
-2. Sebut {destination} di kalimat pertama
-3. Integrasikan teks + gambar
-4. Identifikasi isu secara implisit dalam cerita
-5. Buat 3 rekomendasi kebijakan:
-   - spesifik
-   - realistis
-   - berbasis cerita
-
-=========================
-FORMAT OUTPUT (WAJIB)
-=========================
+OUTPUT (WAJIB FORMAT INI):
 
 📖 Storytelling:
-(TULIS DI SINI)
+(Tuliskan 1 paragraf, kalimat pertama HARUS menyebut {destination})
 
 🏛️ Rekomendasi Kebijakan:
 1. ...
 2. ...
 3. ...
-
-=========================
-LARANGAN TAMBAHAN
-=========================
-
-- Jangan menyebut tempat lain
-- Jangan menambahkan data palsu
-- Jangan keluar dari konteks {destination}
 """
 
         result = call_llm(
-            "Anda adalah sistem DSS ekowisata yang ketat dan tidak boleh berhalusinasi.",
+            "Anda adalah sistem DSS yang akurat dan tidak berhalusinasi.",
             prompt
         )
 
-        # =========================
-        # POST-PROCESSING GUARD
-        # =========================
-
-        if "Destinasi Wisata" in result:
-            result = result.replace("Destinasi Wisata", destination)
+        # HARD CLEANING
+        result = result.replace("Destinasi Wisata", destination)
+        result = result.replace("Based on the input provided,", "")
 
         return result
