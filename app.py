@@ -30,7 +30,7 @@ from transformers import pipeline
 def load_sentiment():
     return pipeline(
         "sentiment-analysis",
-        model="indobenchmark/indobert-base-p1"
+        model="w11wo/indonesian-roberta-base-sentiment-classifier"
     )
 
 def analyze_sentiment(text):
