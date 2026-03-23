@@ -129,9 +129,11 @@ Anda adalah sistem pendukung keputusan kebijakan ekowisata berbasis multimodal.
 ATURAN:
 - Fokus hanya pada destinasi: {destination}
 - Gunakan Bahasa Indonesia formal
-- WAJIB menggabungkan informasi dari teks DAN gambar
+- WAJIB menggabungkan informasi dari teks DAN deskripsi gambar
 - WAJIB menyebut elemen visual dari gambar (objek, suasana, aktivitas)
+- DILARANG menambahkan detail visual yang tidak ada di caption
 - Dilarang membuat cerita umum yang tidak sesuai dengan gambar
+- Jika caption terbatas, gunakan deskripsi umum tanpa mengarang
 - Jangan menyebut destinasi lain
 
 DATA:
@@ -170,10 +172,12 @@ Anda hanya membahas {destination}.
 
 WAJIB:
 - Gunakan Bahasa Indonesia
-- Gunakan informasi dari teks dan gambar
+- Gunakan informasi dari teks dan deskripsi gambar
 - Jika gambar menunjukkan objek tertentu, sebutkan dalam cerita
 - Jangan membuat narasi umum
 - Ikuti format output dengan tepat
+- Jangan menambahkan interpretasi visual yang tidak ada
+- Jangan mengarang objek seperti "reruntuhan kota" jika tidak disebut
 """
 
         # =========================
