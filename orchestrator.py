@@ -11,7 +11,7 @@ class AgentOrchestrator:
 
         destination = self.detect_destination(text)
 
-        return self.agent.run(text, caption, tujuan)
+        return self.agent.run(text, caption, destination, tujuan)
 
     def detect_destination(self, text):
         text_lower = text.lower()
