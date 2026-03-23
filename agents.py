@@ -134,6 +134,8 @@ ATURAN:
 - DILARANG menambahkan detail visual yang tidak ada di caption
 - Dilarang membuat cerita umum yang tidak sesuai dengan gambar
 - Jika caption terbatas, gunakan deskripsi umum tanpa mengarang
+- Gunakan caption sebagai referensi, tetapi prioritaskan kesesuaian dengan destinasi
+- Jika caption tidak sesuai dengan destinasi, abaikan bagian yang tidak relevan
 - Jangan menyebut destinasi lain
 
 DATA:
@@ -148,14 +150,14 @@ TUJUAN KEBIJAKAN:
 {tujuan}
 
 TUGAS:
-1. Buat storytelling yang menggabungkan teks dan gambar secara nyata
-2. Sebut detail visual dari gambar dalam narasi
-3. Identifikasi isu berdasarkan kondisi yang terlihat
-4. Berikan 3 rekomendasi kebijakan yang relevan
+1. Buat storytelling berdasarkan teks dan gambar yang relevan
+2. Sebut elemen visual yang masuk akal untuk destinasi tersebut
+3. Sebut detail visual dari gambar dalam narasi
+4. Identifikasi isu berdasarkan kondisi yang terlihat
+5. Berikan 3 rekomendasi kebijakan yang relevan
 
 FORMAT OUTPUT (WAJIB):
 
-📖 Storytelling:
 Saya mengunjungi {destination} dan melihat ...
 
 🏛️ Rekomendasi Kebijakan:
@@ -199,6 +201,16 @@ WAJIB:
 
         for w in bad_words:
             result = result.replace(w, destination)
+
+        hallucination_words = [
+            "reruntuhan kota",
+            "kota tua",
+            "ancient city",
+            "old ruins"
+        ]
+
+        for w in hallucination_words:
+            result = result.replace(w, "")
 
         # hapus pola jawaban model yang sering muncul
         if "Berikut adalah" in result:
