@@ -109,6 +109,62 @@ OUTPUT:
         return call_llm("Ikuti pola contoh.", prompt)
 
 
+# ================================
+# AGENTIC CONTROL MODULE 
+# =================================
+
+def check_issues(result, destination):
+
+    issues = []
+
+    if "Destinasi Wisata" in result:
+        issues.append("DESTINATION_WRONG")
+
+    if destination not in result:
+        issues.append("DESTINATION_MISSING")
+
+    if len(result) < 120:
+        issues.append("TOO_SHORT")
+
+    # deteksi halusinasi umum
+    hallucination_words = [
+        "reruntuhan kota",
+        "kota tua",
+        "ancient city",
+        "old ruins",
+        "Guatemala"
+    ]
+
+    for w in hallucination_words:
+        if w in result:
+            issues.append("HALLUCINATION")
+
+    return issues
+
+
+def refine_output(result, issues, destination):
+
+    prompt = f"""
+Perbaiki teks berikut:
+
+{result}
+
+Masalah:
+{issues}
+
+ATURAN:
+- Gunakan {destination}
+- Jangan gunakan "Destinasi Wisata"
+- Perbaiki agar lebih natural, detail, imersif, dan konsisten
+- Gunakan Bahasa Indonesia formal
+- Jangan ubah struktur output
+
+HASIL:
+"""
+
+    return call_llm("Refine teks agar lebih baik.", prompt)
+
+
 # =========================
 # AGENT
 # =========================
@@ -225,5 +281,22 @@ WAJIB:
         print("DEBUG DESTINATION:", destination)
         print("DEBUG CAPTION:", caption)
         print("DEBUG RESULT:", result)
+
+        #return result
+
+        # =========================
+        # AGENTIC CONTROL 
+        # =========================
+        max_iter = 2
+
+        for i in range(max_iter):
+            issues = check_issues(result, destination)
+
+            print(f"AGENT LOOP {i}:", issues)
+
+            if not issues:
+                break
+
+            result = refine_output(result, issues, destination)
 
         return result
