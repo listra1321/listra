@@ -38,6 +38,20 @@ def analyze_sentiment(text):
     result = classifier(text)[0]
     return result['label'], result['score']
 
+def validate_destination(text, caption, destinasi):
+
+    text_lower = (text + " " + caption).lower()
+
+    if destinasi == "Candi Borobudur":
+        keywords = ["borobudur", "candi", "stupa", "magelang"]
+    elif destinasi == "Danau Toba":
+        keywords = ["toba", "danau", "sumatera", "samosir"]
+    else:
+        return True
+
+    # cek apakah ada keyword relevan
+    return any(k in text_lower for k in keywords)
+
 # =========================
 # PASSWORD PROTECTION
 # =========================
@@ -160,6 +174,16 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # =========================
         sentiment_label, score = analyze_sentiment(text)
         emoji = map_sentiment_to_emoji(sentiment_label)
+
+        # =========================
+        # VALIDASI DESTINASI
+        # =========================
+        is_valid = validate_destination(text, caption, destinasi)
+
+        if not is_valid:
+        st.error("❌ Maaf, input tidak sesuai dengan destinasi yang dipilih.")
+        st.stop()
+        
 
         # =========================
         # MULTI-AGENT PROCESS
