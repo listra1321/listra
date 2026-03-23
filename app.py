@@ -4,15 +4,18 @@ from orchestrator import AgentOrchestrator
 from caption_lookup import CaptionLookup
 import os
 
-# =========================
-# API KEY (Streamlit Cloud)
-# =========================
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY") or st.secrets["OPENROUTER_API_KEY"]
 
 st.set_page_config(
     page_title="Agentic DSS Ekowisata | Listra Horhoruw",
     layout="wide"
 )
+
+SYSTEM_PASSWORD = st.secrets.get("SYSTEM_PASSWORD")
+
+if not SYSTEM_PASSWORD:
+    st.error("SYSTEM_PASSWORD belum diset di Streamlit Secrets.")
+    st.stop()
 
 from transformers import BlipProcessor, BlipForConditionalGeneration
 import torch
