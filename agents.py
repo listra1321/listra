@@ -126,45 +126,101 @@ class UnifiedAgent:
         prompt = f"""
 Anda adalah sistem pendukung kebijakan ekowisata berbasis multimodal.
 
-ATURAN WAJIB:
-1. Gabungkan teks input dan deskripsi gambar menjadi narasi yang ALAMI dan IMERSIF.
-2. Jangan menghilangkan makna dari teks maupun gambar.
-3. Pastikan storytelling kontekstual dengan destinasi: {destination}.
-4. Setelah storytelling, buat rekomendasi kebijakan untuk pemerintah daerah.
-5. Gunakan Bahasa Indonesia formal.
-6. Hasil dari gambar harus dipastikan sesuai dengan isi gambar.
+=========================
+ATURAN WAJIB (STRICT MODE)
+=========================
 
-DATA:
-Nama Destinasi: {destination}
+1. WAJIB menyebut nama destinasi ini di kalimat pertama:
+   "{destination}"
+
+2. DILARANG menggunakan istilah:
+   - "Destinasi Wisata"
+   - "tempat ini"
+   - "lokasi ini"
+
+3. DILARANG menyebut:
+   - kota/negara lain
+   - destinasi lain selain "{destination}"
+
+4. DILARANG mengarang fakta (contoh: suhu, negara, sejarah fiktif)
+
+5. Jika informasi tidak tersedia:
+   → gunakan deskripsi umum yang realistis
+   → JANGAN berhalusinasi
+
+6. Storytelling HARUS konsisten dengan:
+   - teks input
+   - caption gambar
+   - destinasi "{destination}"
+
+=========================
+DATA
+=========================
+
+Destinasi: {destination}
 Tujuan Kebijakan: {tujuan}
 
-TUGAS:
-1. Buat storytelling wisata yang natural, mengalir, dan deskriptif
-2. Identifikasi isu
-3. Berikan 3 rekomendasi kebijakan konkret berdasarkan hasil storytelling
-4. Rekomendasi harus berdasarkan fakta dari hasil storytelling
-5. Dilarang menyebut destinasi lain
+=========================
+INPUT
+=========================
 
-Teks Input:
+Teks:
+Pengalaman wisata di {destination}.
 {text}
 
-Caption Gambar:
+Deskripsi Gambar:
 {caption}
 
-Contoh:
+=========================
+CONTOH
+=========================
+
 {fewshot}
 
-OUTPUT FORMAT:
+=========================
+TUGAS
+=========================
+
+1. Buat storytelling naratif (1–2 paragraf)
+2. Sebut {destination} di kalimat pertama
+3. Integrasikan teks + gambar
+4. Identifikasi isu secara implisit dalam cerita
+5. Buat 3 rekomendasi kebijakan:
+   - spesifik
+   - realistis
+   - berbasis cerita
+
+=========================
+FORMAT OUTPUT (WAJIB)
+=========================
 
 📖 Storytelling:
-(paragraf naratif yang menyatu antara teks dan gambar)
+(TULIS DI SINI)
 
 🏛️ Rekomendasi Kebijakan:
-1.
-2.
-3.
+1. ...
+2. ...
+3. ...
 
-JANGAN tampilkan evaluasi.
+=========================
+LARANGAN TAMBAHAN
+=========================
+
+- Jangan menyebut tempat lain
+- Jangan menambahkan data palsu
+- Jangan keluar dari konteks {destination}
 """
 
-        return call_llm("Anda adalah sistem pendukung kebijakan ekowisata.", prompt)
+        result = call_llm(
+            "Anda adalah sistem DSS ekowisata yang ketat dan tidak boleh berhalusinasi.",
+            prompt
+        )
+
+        # =========================
+        # POST-PROCESSING GUARD
+        # =========================
+
+        if "Destinasi Wisata" in result:
+            result = result.replace("Destinasi Wisata", destination)
+
+        return result
