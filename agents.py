@@ -247,6 +247,8 @@ WAJIB:
 - Ikuti format output dengan tepat
 - Jangan menambahkan interpretasi visual yang tidak ada
 - Jangan mengarang objek seperti "reruntuhan kota" jika tidak disebut
+- Jika informasi tidak relevan dengan {destination}, jawab:
+  "Maaf, input tidak sesuai dengan destinasi yang dipilih."
 """
 
         # =========================
