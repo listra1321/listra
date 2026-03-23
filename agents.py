@@ -125,11 +125,13 @@ Anda adalah sistem pendukung keputusan kebijakan ekowisata.
 
 ATURAN:
 - Fokus hanya pada destinasi: {destination}
+- Gunakan nama {destination} secara eksplisit dalam narasi
 - Dilarang menyebut destinasi lain
 - Gunakan Bahasa Indonesia formal
 
 DATA:
 Teks wisatawan:
+Pengalaman wisata di {destination}.
 {text}
 
 Deskripsi gambar:
@@ -143,17 +145,22 @@ TUGAS:
 2. Identifikasi isu dari cerita
 3. Berikan 3 rekomendasi kebijakan konkret
 
-Gunakan bahasa formal, jelas, dan berbasis konteks input.
+Gunakan bahasa formal dan berbasis konteks input.
 """
 
         result = call_llm(
-            f"Anda hanya boleh membahas {destination}. Gunakan Bahasa Indonesia.",
+            f"""
+Anda hanya membahas {destination}.
+
+WAJIB:
+- Selalu gunakan nama {destination}
+- Jangan gunakan istilah "Destinasi Wisata"
+- Gunakan Bahasa Indonesia
+""",
             prompt
         )
 
-        # =========================
-        # CLEANING MINIMAL (AMAN)
-        # =========================
+        # CLEANING BACKUP
         bad_words = [
             "Destinasi Wisata",
             "destinasi wisata",
@@ -165,8 +172,6 @@ Gunakan bahasa formal, jelas, dan berbasis konteks input.
 
         for w in bad_words:
             result = result.replace(w, destination)
-
-        result = result.replace("Based on the input provided,", "")
 
         print("DEBUG RESULT:", result)
 
