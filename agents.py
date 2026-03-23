@@ -118,7 +118,7 @@ class UnifiedAgent:
     def __init__(self, memory):
         self.memory = memory
 
-    def run(self, text, caption, destination, tujuan):
+    def run(self, text, caption, tujuan):
 
         examples = self.memory.get_examples(2)
         fewshot = self.memory.format_examples(examples)
