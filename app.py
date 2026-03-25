@@ -62,7 +62,8 @@ def explain_with_lime(text):
     exp = explainer.explain_instance(
         text,
         predict_proba,
-        num_features=6
+        num_features=4,
+        num_samples=50
     )
     
     return exp
