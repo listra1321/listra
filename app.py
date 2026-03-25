@@ -292,15 +292,25 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # =========================
         st.subheader("📊 Penjelasan Model (XAI - LIME)")
 
-        exp = explain_with_lime(text)
-
-        for word, weight in exp.as_list():
-            if weight > 0:
-                st.markdown(f"🟢 **{word}** → +{weight:.3f}")
+        try:
+            exp = explain_with_lime(text)
+        
+            explanation_list = exp.as_list()
+        
+            if not explanation_list:
+                st.warning("⚠️ Tidak ada fitur yang dapat dijelaskan (LIME kosong).")
             else:
-                st.markdown(f"🔴 **{word}** → {weight:.3f}")
-
-        st.caption("Visualisasi kontribusi fitur menggunakan LIME")
+                for word, weight in explanation_list:
+                    if weight > 0:
+                        st.markdown(f"🟢 **{word}** → +{weight:.3f}")
+                    else:
+                        st.markdown(f"🔴 **{word}** → {weight:.3f}")
+        
+                st.caption("Visualisasi kontribusi fitur menggunakan LIME")
+                st.components.v1.html(exp.as_html(), height=400)
+        
+        except Exception as e:
+            st.error(f"Error XAI: {e}")
 
         # =========================
         # VISUAL HTML LIME
