@@ -288,30 +288,52 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         st.subheader("📄 Storytelling Wisata")
         st.write(f"{emoji} {story.strip()}")
         
-        # =========================
-        # XAI (LIME)
-        # =========================
-        st.subheader("📊 Penjelasan Model (XAI - LIME)")
-
+        # ======================================================
+        # XAI 1: INPUT EXPLANATION
+        # ======================================================
+        st.subheader("📊 XAI - Input Explanation")
+        
         try:
-            exp = explain_with_lime(text)
+            exp_input = explain_with_lime(text)
+            explanation_input = exp_input.as_list()
         
-            explanation_list = exp.as_list()
-        
-            if not explanation_list:
-                st.warning("⚠️ Tidak ada fitur yang dapat dijelaskan (LIME kosong).")
+            if not explanation_input:
+                st.warning("⚠️ Tidak ada fitur input yang dapat dijelaskan.")
             else:
-                for word, weight in explanation_list:
+                for word, weight in explanation_input:
                     if weight > 0:
                         st.markdown(f"🟢 **{word}** → +{weight:.3f}")
                     else:
                         st.markdown(f"🔴 **{word}** → {weight:.3f}")
         
-                st.caption("Visualisasi kontribusi fitur menggunakan LIME")
-                st.components.v1.html(exp.as_html(), height=400)
+                st.caption("Kontribusi fitur input terhadap pembentukan storytelling")
         
         except Exception as e:
-            st.error(f"Error XAI: {e}")
+            st.error(f"Error Input XAI: {e}")
+        
+        
+        # ======================================================
+        # XAI 2: STORYTELLING EXPLANATION
+        # ======================================================
+        st.subheader("📊 XAI - Storytelling Explanation")
+        
+        try:
+            exp_story = explain_with_lime(story)
+            explanation_story = exp_story.as_list()
+        
+            if not explanation_story:
+                st.warning("⚠️ Tidak ada fitur storytelling yang dapat dijelaskan.")
+            else:
+                for word, weight in explanation_story:
+                    if weight > 0:
+                        st.markdown(f"🟢 **{word}** → +{weight:.3f}")
+                    else:
+                        st.markdown(f"🔴 **{word}** → {weight:.3f}")
+        
+                st.caption("Kontribusi kata dalam storytelling terhadap karakteristik narasi")
+        
+        except Exception as e:
+            st.error(f"Error Story XAI: {e}")
     
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
