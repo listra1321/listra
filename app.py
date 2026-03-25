@@ -22,6 +22,8 @@ def map_sentiment_to_emoji(label):
         return "😐"
 
 from transformers import pipeline
+from lime.lime_text import LimeTextExplainer
+import numpy as np
 
 # =========================
 # SENTIMENT MODEL
@@ -37,6 +39,33 @@ def analyze_sentiment(text):
     classifier = load_sentiment()
     result = classifier(text)[0]
     return result['label'], result['score']
+
+def predict_proba(texts):
+    classifier = load_sentiment()
+    results = []
+    
+    for t in texts:
+        res = classifier(t)[0]
+        score = res["score"]
+        
+        if res["label"] == "positive":
+            results.append([1-score, score])
+        else:
+            results.append([score, 1-score])
+    
+    return np.array(results)
+
+
+def explain_with_lime(text):
+    explainer = LimeTextExplainer(class_names=["negatif", "positif"])
+    
+    exp = explainer.explain_instance(
+        text,
+        predict_proba,
+        num_features=6
+    )
+    
+    return exp
 
 def validate_destination(text, caption, destinasi):
 
@@ -257,8 +286,28 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         # =========================
         st.subheader("📄 Storytelling Wisata")
         st.write(f"{emoji} {story.strip()}")
+        
+        # =========================
+        # XAI (LIME)
+        # =========================
+        st.subheader("📊 Penjelasan Model (XAI - LIME)")
 
+        exp = explain_with_lime(text)
 
+        for word, weight in exp.as_list():
+            if weight > 0:
+                st.markdown(f"🟢 **{word}** → +{weight:.3f}")
+            else:
+                st.markdown(f"🔴 **{word}** → {weight:.3f}")
+
+        st.caption("Visualisasi kontribusi fitur menggunakan LIME")
+
+        # =========================
+        # VISUAL HTML LIME
+        # =========================
+        st.components.v1.html(exp.as_html(), height=400)
+
+    
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
 
