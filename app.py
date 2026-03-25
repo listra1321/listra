@@ -312,12 +312,6 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
         
         except Exception as e:
             st.error(f"Error XAI: {e}")
-
-        # =========================
-        # VISUAL HTML LIME
-        # =========================
-        st.components.v1.html(exp.as_html(), height=400)
-
     
     else:
         st.warning("⚠️ Mohon lengkapi teks dan gambar.")
