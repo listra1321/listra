@@ -307,6 +307,7 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
                         st.markdown(f"🔴 **{word}** → {weight:.3f}")
         
                 st.caption("Kontribusi fitur input terhadap pembentukan storytelling")
+                st.components.v1.html(exp.as_html(), height=400)
         
         except Exception as e:
             st.error(f"Error Input XAI: {e}")
@@ -331,6 +332,7 @@ if st.button("🧠 Generate Storytelling & Kebijakan"):
                         st.markdown(f"🔴 **{word}** → {weight:.3f}")
         
                 st.caption("Kontribusi kata dalam storytelling terhadap karakteristik narasi")
+                st.components.v1.html(exp.as_html(), height=400)
         
         except Exception as e:
             st.error(f"Error Story XAI: {e}")
